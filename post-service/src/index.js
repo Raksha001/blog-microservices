@@ -1,4 +1,3 @@
-// post-service/src/index.js
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
@@ -28,6 +27,7 @@ const authenticateToken = (req, res, next) => {
   }
 };
 
+// Create post
 app.post('/posts', authenticateToken, async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -43,11 +43,100 @@ app.post('/posts', authenticateToken, async (req, res) => {
   }
 });
 
+// Get all posts with pagination
 app.get('/posts', async (req, res) => {
   try {
-    const posts = await Post.find().sort({ createdAt: -1 });
-    res.json(posts);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Post.countDocuments();
+    const totalPages = Math.ceil(total / limit);
+
+    res.json({
+      posts,
+      currentPage: page,
+      totalPages,
+      totalPosts: total,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    });
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get post by ID
+app.get('/posts/:id', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+    res.json(post);
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(400).json({ error: 'Invalid post ID format' });
+    }
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update post
+app.put('/posts/:id', authenticateToken, async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    // Check if the user is the author of the post
+    if (post.authorId.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Not authorized to update this post' });
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      req.params.id,
+      { title, content },
+      { new: true }
+    );
+
+    res.json(updatedPost);
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(400).json({ error: 'Invalid post ID format' });
+    }
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete post
+app.delete('/posts/:id', authenticateToken, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    // Check if the user is the author of the post
+    if (post.authorId.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Not authorized to delete this post' });
+    }
+
+    await Post.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    if (error.kind === 'ObjectId') {
+      return res.status(400).json({ error: 'Invalid post ID format' });
+    }
     res.status(500).json({ error: error.message });
   }
 });
