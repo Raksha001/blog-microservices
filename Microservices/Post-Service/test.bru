@@ -1,0 +1,149 @@
+{
+  "version": "1",
+  "name": "post-service",
+  "contents": [
+    {
+      "request": {
+        "name": "Create Post",
+        "method": "POST",
+        "url": "http://localhost:3001/posts",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer {{authToken}}"
+        },
+        "body": {
+          "mode": "json",
+          "content": {
+            "title": "Test Post Title",
+            "content": "This is a test post content"
+          }
+        },
+        "vars": {
+          "postId": "response.body.id"
+        }
+      },
+      "response": {
+        "status": 201,
+        "bodyContains": ["title", "content", "authorId", "createdAt", "_id"]
+      }
+    },
+    {
+      "request": {
+        "name": "Get Posts (Paginated)",
+        "method": "GET",
+        "url": "http://localhost:3001/posts?page=1&limit=10"
+      },
+      "response": {
+        "status": 200,
+        "bodyContains": ["posts", "currentPage", "totalPages", "totalPosts", "hasNextPage", "hasPrevPage"]
+      }
+    },
+    {
+      "request": {
+        "name": "Get Single Post",
+        "method": "GET",
+        "url": "http://localhost:3001/posts/{{postId}}"
+      },
+      "response": {
+        "status": 200,
+        "bodyContains": ["title", "content", "authorId", "createdAt", "_id"]
+      }
+    },
+    {
+      "request": {
+        "name": "Update Post",
+        "method": "PUT",
+        "url": "http://localhost:3001/posts/{{postId}}",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer {{authToken}}"
+        },
+        "body": {
+          "mode": "json",
+          "content": {
+            "title": "Updated Post Title",
+            "content": "This is the updated content"
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "bodyContains": ["title", "content"]
+      }
+    },
+    {
+      "request": {
+        "name": "Delete Post",
+        "method": "DELETE",
+        "url": "http://localhost:3001/posts/{{postId}}",
+        "headers": {
+          "Authorization": "Bearer {{authToken}}"
+        }
+      },
+      "response": {
+        "status": 200,
+        "bodyContains": ["message"]
+      }
+    },
+    {
+      "request": {
+        "name": "Get Non-existent Post",
+        "method": "GET",
+        "url": "http://localhost:3001/posts/507f1f77bcf86cd799439011"
+      },
+      "response": {
+        "status": 404,
+        "bodyContains": ["error"]
+      }
+    },
+    {
+      "request": {
+        "name": "Create Post Without Auth",
+        "method": "POST",
+        "url": "http://localhost:3001/posts",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "mode": "json",
+          "content": {
+            "title": "Test Post Title",
+            "content": "This is a test post content"
+          }
+        }
+      },
+      "response": {
+        "status": 401,
+        "bodyContains": ["error"]
+      }
+    },
+    {
+      "request": {
+        "name": "Update Post With Invalid ID",
+        "method": "PUT",
+        "url": "http://localhost:3001/posts/invalid-id",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer {{authToken}}"
+        },
+        "body": {
+          "mode": "json",
+          "content": {
+            "title": "Updated Title",
+            "content": "Updated content"
+          }
+        }
+      },
+      "response": {
+        "status": 400,
+        "bodyContains": ["error"]
+      }
+    }
+  ],
+  "environments": {
+    "development": {
+      "authToken": "your_valid_jwt_token_here",
+      "postId": ""
+    }
+  }
+}

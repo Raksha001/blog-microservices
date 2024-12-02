@@ -1,0 +1,23 @@
+meta {
+  name: Create Post
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/posts
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+}
+
+body:json {
+  {
+      "title": "Test Post Title 3",
+      "content": "This is a test post content 3"
+  }
+}

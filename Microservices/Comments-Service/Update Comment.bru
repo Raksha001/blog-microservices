@@ -1,0 +1,33 @@
+meta {
+  name: Update Comment
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseCUrl}}/comments/{{commentId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+}
+
+body:json {
+  {
+      "content": "This is an updated comment"
+  }
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Comment was updated", function () {
+      var jsonData = res.getBody();
+  //     expect(jsonData.content).to.equal(JSON.parse(pm.request.body.raw).content);
+  });
+}

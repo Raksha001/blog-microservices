@@ -1,0 +1,26 @@
+meta {
+  name: Delete Comment
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/comments/{{commentId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{authToken}}
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Success message received", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.have.property('message');
+  });
+}

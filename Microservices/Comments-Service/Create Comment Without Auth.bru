@@ -1,0 +1,32 @@
+meta {
+  name: Create Comment Without Auth
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseCUrl}}/posts/{{postId}}/comments
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "content": "This should fail without auth"
+  }
+}
+
+tests {
+  test("Status code is 401", function () {
+      expect(res.getStatus()).to.equal(401);
+  });
+  
+  test("Error message exists", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.have.property('error');
+  });
+}

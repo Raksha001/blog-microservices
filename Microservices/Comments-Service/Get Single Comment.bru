@@ -1,0 +1,24 @@
+meta {
+  name: Get Single Comment
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseCUrl}}/comments/{{commentId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Comment has required fields", function () {
+      var jsonData = res.getBody();
+      expect(jsonData).to.have.property('_id');
+      expect(jsonData).to.have.property('content');
+      expect(jsonData).to.have.property('postId');
+  });
+}

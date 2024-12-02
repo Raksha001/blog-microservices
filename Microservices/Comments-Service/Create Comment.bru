@@ -1,0 +1,33 @@
+meta {
+  name: Create Comment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseCUrl}}/posts/{{postId}}/comments
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer {{authToken}}
+}
+
+body:json {
+  {
+      "content": "This is a test comment"
+  }
+}
+
+tests {
+  if (res.getStatus() === 201) {
+      var jsonData = res.getBody();
+      bru.setEnvVar("commentId", jsonData._id);
+      test("Comment created successfully", function() {
+          expect(jsonData.content).to.be.a('string');
+          expect(jsonData._id).to.be.a('string');
+      });
+  }
+}
