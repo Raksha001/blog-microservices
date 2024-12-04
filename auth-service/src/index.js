@@ -42,4 +42,4 @@ app.post('/login', async (req, res) => {
 });
 
 mongoose.connect('mongodb+srv://2023sl93085:0tKe6jT35kDBtZT1@cluster0.rn0hc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
-app.listen(5002, () => console.log('Auth service running on port 3000'));
+app.listen(5001, () => console.log('Auth service running on port 5001'));

@@ -47,6 +47,7 @@ app.post('/posts', authenticateToken, async (req, res) => {
 app.get('/posts', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
+    console.log(req);
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
@@ -57,6 +58,7 @@ app.get('/posts', async (req, res) => {
 
     const total = await Post.countDocuments();
     const totalPages = Math.ceil(total / limit);
+    
 
     res.json({
       posts,
@@ -74,6 +76,7 @@ app.get('/posts', async (req, res) => {
 // Get post by ID
 app.get('/posts/:id', async (req, res) => {
   try {
+    console.log(req.params)
     const post = await Post.findById(req.params.id);
     if (!post) {
       return res.status(404).json({ error: 'Post not found' });
@@ -142,4 +145,4 @@ app.delete('/posts/:id', authenticateToken, async (req, res) => {
 });
 
 mongoose.connect('mongodb+srv://2023sl93085:0tKe6jT35kDBtZT1@cluster0.rn0hc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
-app.listen(3001, () => console.log('Post service running on port 3001'));
+app.listen(3003, () => console.log('Post service running on port 3001'));
