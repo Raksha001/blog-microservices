@@ -3,16 +3,13 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './context/AuthContext';
 import LoginForm from './components/Auth/LoginForm';
-// import RegisterForm from './components/Auth/RegisterForm';
+import RegisterForm from './components/Auth/RegisterForm';
 import PostList from './components/Posts/PostList';
 // import PostDetail from './components/Posts/PostDetail';
-// import CreatePost from './components/Posts/CreatePost';
+import CreatePost from './components/Posts/CreatePost';
 import Navbar from './components/Layout/Navbar';
 import './index.css';
 
-
-
-// Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { token } = useAuth();
   
@@ -33,14 +30,14 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<PostList />} />
               <Route path="/login" element={<LoginForm />} />
-              {/* <Route path="/register" element={<RegisterForm />} /> */}
+              <Route path="/register" element={<RegisterForm />} />
               <Route path="/posts" element={<PostList />} />
               {/* <Route path="/posts/:id" element={<PostDetail />} /> */}
               <Route 
                 path="/posts/create" 
                 element={
                   <ProtectedRoute>
-                    {/* <CreatePost /> */}
+                    <CreatePost />
                   </ProtectedRoute>
                 } 
               />
