@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
+  let navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await api.auth.login(email, password);
       login(response.data.token);
+      navigate("/posts");
     } catch (error) {
       console.error('Login failed:', error);
     }
