@@ -1,9 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 const app = express();
+app.use(cors({
+  origin: '*',
+}));
 app.use(express.json());
+
 
 const postSchema = new mongoose.Schema({
   title: String,
@@ -145,4 +150,4 @@ app.delete('/posts/:id', authenticateToken, async (req, res) => {
 });
 
 mongoose.connect('mongodb+srv://2023sl93085:0tKe6jT35kDBtZT1@cluster0.rn0hc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
-app.listen(3003, () => console.log('Post service running on port 3001'));
+app.listen(3003, () => console.log('Post service running on port 3003'));
