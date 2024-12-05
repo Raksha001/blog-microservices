@@ -5,7 +5,7 @@ import { useAuth } from './context/AuthContext';
 import LoginForm from './components/Auth/LoginForm';
 import RegisterForm from './components/Auth/RegisterForm';
 import PostList from './components/Posts/PostList';
-// import PostDetail from './components/Posts/PostDetail';
+import PostDetail from './components/Posts/PostDetail';
 import CreatePost from './components/Posts/CreatePost';
 import Navbar from './components/Layout/Navbar';
 import './index.css';
@@ -32,7 +32,7 @@ const App: React.FC = () => {
               <Route path="/login" element={<LoginForm />} />
               <Route path="/register" element={<RegisterForm />} />
               <Route path="/posts" element={<PostList />} />
-              {/* <Route path="/posts/:id" element={<PostDetail />} /> */}
+              <Route path="/posts/:id" element={<PostDetail />} />
               <Route 
                 path="/posts/create" 
                 element={
